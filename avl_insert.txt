@@ -1,0 +1,177 @@
+import java.util.*;
+
+class node
+{
+	protected int data;
+	node left,right;
+	int height;
+	public node(int n)
+	{
+		left=null;
+		right=null;
+		data=n;
+		height=0;
+	}
+}
+class AvlTree
+{
+	node root;
+	public AvlTree()
+	{
+	  root=null;
+	}
+	public void insert(int a)
+	{
+		root=avlInsert(a,root);
+		//System.out.println("root data"+root.data);
+	}
+	private node avlInsert(int a,node t)
+	{
+	    
+	if(t==null){
+		t=new node(a);
+		//System.out.println("first node"+t.data);
+	}
+	if(a<t.data)
+	{
+		t.left=avlInsert(a,t.left);
+		if(height(t.left)-height(t.right)==2)
+			if(a<t.left.data)
+				t=LL(t);
+			else
+				t=LR(t);
+	}
+	if(a>t.data)
+	{
+		t.right=avlInsert(a,t.right);
+		if(height(t.left)-height(t.right)==-2)
+			if(a>t.right.data)
+				t=RR(t);
+			else
+				t=RL(t);
+	}
+	//else {}
+	t.height=max(height(t.left),height(t.right))+1;
+	return t;
+	}
+	public int height(node q){
+		return q==null ? -1:q.height;
+	}
+	public int max(int a,int b){
+	return a>b ?a:b;
+	}
+	private node LL(node n1){
+		node n2=n1.left;
+		n1.left=n2.right;
+		n2.right=n1;
+		n2.height=max(height(n2.left),height(n2.right))+1;
+		n1.height=max(height(n1.left),height(n1.right))+1;
+		return n2;
+	}
+	private node RR(node q){
+		node q1=q.right;
+		q.right=q1.left;
+		q1.left=q;
+		q.height=max(height(q.left),height(q.right))+1;
+		q1.height=max(height(q1.left),height(q1.right))+1;
+		return q1;
+		}
+	private node LR(node k1){
+
+	k1.left=RR(k1.left);
+	return LL(k1);
+	}
+	private node RL(node k1){
+
+	k1.right=LL(k1.right);
+	return RR(k1);
+	}
+	public void preorder(){
+		preorder(root);
+	}
+	private void preorder(node r){
+		if(r!=null){
+			System.out.println(r.data);
+			preorder(r.left);
+			preorder(r.right);
+		    }
+	}
+	private node minvalue(node q){
+	    node current=q;
+	    while(current.left!=null)
+	      current=current.left;
+	    return current;
+	}
+	public void delete(int val){
+	   root=avlDelete(val,root);
+	}
+	private node avlDelete(int val,node q){
+	   if(q==null)
+		return q;
+	   if(val<q.data)
+		q.left=avlDelete(val,q.left);
+	   else if(val>q.data)
+		q.right=avlDelete(val,q.right);
+	   else{
+		node temp=null;
+		if(q.left==null || q.right==null){
+		   if(q.left==null)
+			temp=q.right;
+		   else
+			temp=q.left;
+		   if(temp==null){
+			temp=q;
+			q=null;
+		   }
+		   else
+		       q=temp;
+		
+		}
+		else{
+		    node temp1=minvalue(q.right);
+		    q.data=temp1.data;
+		    q.right=avlDelete(temp1.data,q.right);
+		}
+
+	   }
+	   if(q==null)
+		return q;
+	   q.height=max(height(q.left),height(q.right))+1;
+	   int balance=getBalance(q);
+	   if(balance>1 && getBalance(q.left)>=0)
+		return LL(q);
+	   if(balance>1 && getBalance(q.left)<0)
+		return LR(q);
+	   if(balance<1 && getBalance(q.right)<=0)
+		return RR(q);
+	   if(balance<1 && getBalance(q.left)>0)
+		return RL(q); 
+		
+	return q;	
+	  	
+
+	}
+
+	 private int getBalance(node r){
+	     if(r==null)
+	        return 0;
+	   else     
+	    return height(r.left)-height(r.right);  
+	}
+ 
+}
+public class AvlTest{
+	public static void main(String args[])
+	{
+		AvlTree at=new AvlTree();
+		at.insert(10);
+		at.insert(25);
+		at.insert(11);
+		at.insert(9);
+		at.delete(11);
+		at.preorder();
+	}
+}
+
+
+

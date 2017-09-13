@@ -1,0 +1,82 @@
+class Node{
+   
+	int data;
+  
+ 	Node next;
+  
+ 	Node(int d){
+ 
+   		data=d;
+     
+		 next=null;
+  
+	 }
+
+}
+
+class Linked_Stack{
+   
+   Node top;
+
+   Linked_Stack(){
+    
+      top=null;
+  
+   }
+     
+   void push(int da){
+        
+        Node temp=new Node(da); 
+   
+        if(top==null){
+
+             top=temp;
+     
+        }
+	
+        else{
+	    
+    	  temp.next=top;
+	    
+          top=temp;
+	     
+          System.out.println("value added");
+	  }
+
+        }
+ 
+       void pop()
+    
+       {
+       
+          if(top!=null){
+          
+  		System.out.println(top.data);
+	
+                top=top.next; 
+   
+          }
+	   
+   
+     }
+
+}
+
+public class Try{
+
+  public static void main(String args[]){
+   
+   Linked_Stack s=new Linked_Stack();
+
+      s.push(12);
+
+      s.push(2);
+    
+      s.push(10);
+ 
+      s.pop();
+  
+   }
+
+
+}
